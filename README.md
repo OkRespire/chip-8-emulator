@@ -7,3 +7,8 @@
 
 
 - Some roms do NOT work. Especially the super chip-8 ones, but i may implement that at a later date.
+
+
+
+
+# *USED RUST AND SDL2*
