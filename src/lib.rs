@@ -25,8 +25,8 @@ const NUM_REG: usize = 16;
 const NUM_KEYS: usize = 16;
 const START_ADR: u16 = 0x200;
 
-pub const SCREEN_HEIGHT: usize = 64;
-pub const SCREEN_WIDTH: usize = 32;
+pub const SCREEN_HEIGHT: usize = 32;
+pub const SCREEN_WIDTH: usize = 64;
 
 pub struct Emulator {
     pc: u16,
@@ -82,7 +82,37 @@ impl Emulator {
         }
     }
 
+    pub fn get_display(&self) -> &[bool] {
+        &self.display
+    }
+
+    pub fn key_press(&mut self, idx: usize, pressed: bool) {
+        self.keys[idx] = pressed;
+    }
+
+    pub fn load_rom(&mut self, byte_list: &[u8]) {
+        let start = START_ADR as usize;
+        let end = START_ADR as usize + byte_list.len();
+
+        self.memory[start..end].copy_from_slice(byte_list);
+    }
+
+    pub fn reset(&mut self) {
+        self.pc = START_ADR;
+        self.memory = [0; RAM_SIZE];
+        self.display = [false; SCREEN_HEIGHT * SCREEN_WIDTH];
+        self.idx_reg = 0;
+        self.v_reg = [0; NUM_REG];
+        self.stack = VecDeque::from(vec![0; 16]);
+        self.sound_timer = 0;
+        self.delay_timer = 0;
+        self.keys = [false; NUM_KEYS];
+    }
+
     pub fn fetch(&mut self) -> u16 {
+        if self.pc as usize > RAM_SIZE - 2 {
+            panic!("Program counter out of bounds: {}", self.pc);
+        }
         let top_byte = self.memory[self.pc as usize] as u16;
         let bot_byte = self.memory[(self.pc + 1) as usize] as u16;
         self.pc += 2;
@@ -100,10 +130,17 @@ impl Emulator {
             (0, 0, 0xE, 0) => {
                 self.display = [false; SCREEN_HEIGHT * SCREEN_WIDTH];
             }
+            (0, 0, 0xE, 0xE) => {
+                if let Some(return_addr) = self.stack.pop_front() {
+                    self.pc = return_addr as u16;
+                } else {
+                    println!("Warning! Stack underflow");
+                }
+            }
             (1, _, _, _) => {
                 //jump
                 let nnn = op & 0xFFF;
-                self.pc += nnn;
+                self.pc = nnn;
             }
             (2, _, _, _) => {
                 //call NNN
@@ -262,6 +299,9 @@ impl Emulator {
 
                 for curr_y in 0..rows {
                     let address = self.idx_reg + curr_y;
+                    if address as usize > RAM_SIZE {
+                        panic!("Memory access out of bounds {}", address)
+                    }
                     let pixels = self.memory[address as usize];
 
                     for curr_x in 0..8 {
