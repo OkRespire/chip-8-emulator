@@ -45,7 +45,7 @@ fn main() {
 
     rom.read_to_end(&mut buf).unwrap();
 
-    chip8_emu.load_rom(&buf);
+    chip8_emu.load_rom(&buf); //hello world
 
     'emuLoop: loop {
         for event in event_pump.poll_iter() {
