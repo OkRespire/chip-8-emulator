@@ -6,7 +6,7 @@
 - [aquova Rust chip-8 introduction](https://github.com/aquova/chip8-book) - **HELPED SO MUCH FOR THE GUI THANK YOU**
 
 # *USED RUST AND SDL2*
-
+# Not working with windows
 
 # How to use
 
