@@ -6,7 +6,17 @@
 - [aquova Rust chip-8 introduction](https://github.com/aquova/chip8-book) - **HELPED SO MUCH FOR THE GUI THANK YOU**
 
 # *USED RUST AND SDL2*
-# Not working with windows
+# For Windows
+- You will need SDL2 as a pre-requisite
+```
+git clone https://github.com/microsoft/vcpkg.git
+cd vcpkg
+.\bootstrap-vcpkg.bat
+.\vcpkg install sdl2
+.\vcpkg integrate install
+```
+
+The above clones vcpkg which allows you to install SDL2
 
 # How to use
 
@@ -18,12 +28,19 @@ $ git clone https://github.com/OkRespire/chip-8-emulator.git
 ## 2. build the program
 ```bash
 $ cd chip-8-emulator
-$ cargo build
+$ cargo build --release
 ```
 
 ## 3. Run the program
+- On Linux and MacOS
 ```bash
-$  ./target/debug/chip-8-emulator path/to/rom
+$  ./target/release/chip-8-respire path/to/rom
+```
+
+- On Windows
+
+```
+./target/release/chip-8-respire.exe path/to/rom
 ```
 
 ## 4. Enjoy!
