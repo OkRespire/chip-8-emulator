@@ -5,7 +5,7 @@
 - [Tobias V. Langhoff's guide](https://tobiasvl.github.io/blog/write-a-chip-8-emulator/#prerequisites)
 - [aquova Rust chip-8 introduction](https://github.com/aquova/chip8-book) - **HELPED SO MUCH FOR THE GUI THANK YOU**
 
-# *USED RUST AND SDL2*
+# *USED [RUST](https://www.rust-lang.org/tools/install) AND SDL2*
 # For Windows
 - You will need SDL2 as a pre-requisite
 ```
